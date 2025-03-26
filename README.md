@@ -6,11 +6,9 @@ This is a modified version of "PACK," originally created by Peter Kacherginsky, 
 The original project can be found at [https://github.com/iphelix/pack](https://github.com/iphelix/pack)
 
 Original readme below:
-
-Password Analysis and Cracking Kit by Peter Kacherginsky (iphelix)
 ==================================================================
 
-PACK (Password Analysis and Cracking Toolkit) is a collection of utilities developed to aid in analysis of password lists in order to enhance password cracking through pattern detection of masks, rules, character-sets and other password characteristics. The toolkit generates valid input files for Hashcat family of password crackers.
+RE-PACK (Password Analysis and Cracking Toolkit) is a Python 3 fork of the original PACK toolkit by Peter Kacherginsky (iphelix). This collection of utilities is developed to aid in analysis of password lists in order to enhance password cracking through pattern detection of masks, rules, character-sets and other password characteristics. The toolkit generates valid input files for Hashcat family of password crackers.
 
 NOTE: The toolkit itself is not able to crack passwords, but instead designed to make operation of password crackers more efficient.
 
@@ -24,18 +22,18 @@ StatsGen
 
 The most basic analysis that you can perform is simply obtaining most common length, character-set and other characteristics of passwords in the provided list. In the example below, we will use 'rockyou.txt' containing approximately 14 million passwords. Launch `statsgen.py` with the following command line:
 
-    $ python statsgen.py rockyou.txt
+    $ python3 statsgen.py rockyou.txt
 
 Below is the output from the above command:
 
                            _
-         StatsGen #.#.#   | |
+         StatsGen 1.0.1   | |
           _ __   __ _  ___| | _
          | '_ \ / _` |/ __| |/ /
          | |_) | (_| | (__|   < 
          | .__/ \__,_|\___|_|\_\
          | |                    
-         |_| iphelix@thesprawl.org
+         |_| @wretiii
 
 
     [*] Analyzing passwords in [rockyou.txt]
@@ -104,7 +102,7 @@ Using filters
 
 Let's see how RockYou users tend to select their passwords using the "stringdigit" simple mask (a string followed by numbers):
 
-    $ python statsgen.py ../PACK-0.0.3/archive/rockyou.txt --simplemask stringdigit -q --hiderare
+    $ python3 statsgen.py ../PACK-0.0.3/archive/rockyou.txt --simplemask stringdigit -q --hiderare
 
     [*] Analyzing passwords in [rockyou.txt]
     [+] Analyzing 37% (5339556/14344390) of passwords
@@ -169,20 +167,18 @@ All of the password masks and their frequencies will be saved into the specified
 MaskGen
 ==================
 
-MaskGen allows you to craft pattern-based mask attacks for input into Hashcat family of password crackers. The tool uses output produced by statsgen above with the '-o' flag in order to produce the most optimal mask attack sorted by mask complexity, mask occurrence or ratio of the two (optimal index).
+MaskGen allows you to craft pattern-based mask attacks for input into Hashcat family of password crackers. Launch the tool using:
 
-Let's run MaskGen with only StatGen's output as an argument:
-
-    $ python maskgen.py rockyou.masks
+    $ python3 maskgen.py rockyou.masks
 
                            _ 
-         MaskGen #.#.#    | |
+         MaskGen 1.0.1    | |
           _ __   __ _  ___| | _
          | '_ \ / _` |/ __| |/ /
          | |_) | (_| | (__|   < 
          | .__/ \__,_|\___|_|\_\
          | |                    
-         |_| iphelix@thesprawl.org
+         |_| @wretiii
 
 
     [*] Analyzing masks in [rockyou.masks]
@@ -205,7 +201,7 @@ Specifying target time
 
 Since you are usually limited in time to perform and craft attacks, maskgen allows you to specify how much time you have to perform mask attacks and will generate the most optimal collection of masks based on the sorting mode. Let's play a bit with different sorting modes and target times:
 
-    $ python maskgen.py rockyou.masks --targettime 600 --optindex -q
+    $ python3 maskgen.py rockyou.masks --targettime 600 --optindex -q
     [*] Analyzing masks in [rockyou.masks]
     [*] Using 1,000,000,000 keys/sec for calculations.
     [*] Sorting masks by their [optindex].
@@ -216,7 +212,7 @@ Since you are usually limited in time to perform and craft attacks, maskgen allo
         Masks runtime:   0:11:36
 
 
-    $ python maskgen.py rockyou.masks --targettime 600 --complexity -q
+    $ python3 maskgen.py rockyou.masks --targettime 600 --complexity -q
     [*] Analyzing masks in [rockyou.masks]
     [*] Using 1,000,000,000 keys/sec for calculations.
     [*] Sorting masks by their [complexity].
@@ -227,7 +223,7 @@ Since you are usually limited in time to perform and craft attacks, maskgen allo
         Masks runtime:   0:10:01
 
 
-    $ python maskgen.py rockyou.masks --targettime 600 --occurrence -q
+    $ python3 maskgen.py rockyou.masks --targettime 600 --occurrence -q
     [*] Analyzing masks in [rockyou.masks]
     [*] Using 1,000,000,000 keys/sec for calculations.
     [*] Sorting masks by their [occurrence].
@@ -243,7 +239,7 @@ NOTE: Masks sorted by complexity can be very effective when attacking policy bas
 
 Let's see some of the masks generated by maskgen in optindex mode using the --showmasks flag:
 
-    $ python maskgen.py rockyou.masks --targettime 43200 --optindex -q --showmasks
+    $ python3 maskgen.py rockyou.masks --targettime 43200 --optindex -q --showmasks
     [*] Analyzing masks in [rockyou.masks]
     [*] Using 1,000,000,000 keys/sec for calculations.
     [*] Sorting masks by their [optindex].
@@ -284,7 +280,7 @@ Specifying mask filters
 
 You can further optimize your generated mask attacks by using filters. For example, you may have sufficiently powerful hardware where you can simple bruteforce all of the passwords up to 8 characters. In this case, you can generate masks only greater than 8 characters using the --minlength flag as follows:
 
-    $ python maskgen.py rockyou.masks --targettime 43200 --optindex -q --minlength 8
+    $ python3 maskgen.py rockyou.masks --targettime 43200 --optindex -q --minlength 8
     [*] Analyzing masks in [rockyou.masks]
     [*] Using 1,000,000,000 keys/sec for calculations.
     [*] Sorting masks by their [optindex].
@@ -317,7 +313,7 @@ Saving generated masks
 
 Once you are satisfied with the above generated masks, you can save them using the -o flag:
 
-    $ python maskgen.py rockyou.masks --targettime 43200 --optindex -q -o rockyou.hcmask
+    $ python3 maskgen.py rockyou.masks --targettime 43200 --optindex -q -o rockyou.hcmask
     [*] Analyzing masks in [rockyou.masks]
     [*] Saving generated masks to [rockyou.hcmask]
     [*] Using 1,000,000,000 keys/sec for calculations.
@@ -335,9 +331,9 @@ Checking mask coverage
 
 It is often useful to see how well generated masks perform against already cracked lists. Maskgen can compare a collection of masks against others to see how well they would perform if masks from one password list would be attempted against another. Let's compare how well masks generated from RockYou list will perform against another compromised list such as Gawker:
 
-    $ python statsgen.py ../PACK-0.0.3/archive/gawker.dic -o gawker.masks
+    $ python3 statsgen.py ../PACK-0.0.3/archive/gawker.dic -o gawker.masks
 
-    $ python maskgen.py gawker.masks --checkmasksfile rockyou.hcmask -q
+    $ python3 maskgen.py gawker.masks --checkmasksfile rockyou.hcmask -q
     [*] Analyzing masks in [gawker.masks]
     [*] Using 1,000,000,000 keys/sec for calculations.
     [*] Checking coverage of masks in [rockyou.hcmask]
@@ -350,7 +346,7 @@ Using the '--checkmasksfile' parameter we attempted to run masks inside 'rockyou
 
 It is also possible to see the coverage of one or more masks by specifying them directly on the command-line as follows:
 
-    $ python maskgen.py gawker.masks --checkmasks="?u?l?l?l?l?l?d,?l?l?l?l?l?d?d" -q
+    $ python3 maskgen.py gawker.masks --checkmasks="?u?l?l?l?l?l?d,?l?l?l?l?l?d?d" -q
     [*] Analyzing masks in [gawker.masks]
     [*] Using 1,000,000,000 keys/sec for calculations.
     [*] Checking coverage of the these masks [?u?l?l?l?l?l?d, ?l?l?l?l?l?d?d]
@@ -366,7 +362,7 @@ Specifying speed
 
 Depending on your exact hardware specs and target hash you may want to increase or decrease keys/sec speed used during calculations using the '--pps' parameter:
 
-    $ python maskgen.py rockyou.masks --targettime 43200 --pps 50000000 -q
+    $ python3 maskgen.py rockyou.masks --targettime 43200 --pps 50000000 -q
     [*] Analyzing masks in [rockyou.masks]
     [*] Using 50,000,000 keys/sec for calculations.
     [*] Sorting masks by their [optindex].
@@ -385,15 +381,15 @@ A lot of the mask and dictionary attacks will fail in the corporate environment 
 
 Below is a sample session where we generate all valid password masks for an environment requiring at least one digit, one upper, and one special characters.
 
-    $ python policygen.py --minlength 8 --maxlength 8 --minlower 1 --minupper 1 --mindigit 1 --minspecial 1 -o complexity.hcmask
+    $ python3 policygen.py --minlength 8 --maxlength 8 --minlower 1 --minupper 1 --mindigit 1 --minspecial 1 -o complexity.hcmask
                            _ 
-         PolicyGen #.#.#  | |
+         PolicyGen 1.0.1  | |
           _ __   __ _  ___| | _
          | '_ \ / _` |/ __| |/ /
          | |_) | (_| | (__|   < 
          | .__/ \__,_|\___|_|\_\
          | |                    
-         |_| iphelix@thesprawl.org
+         |_| @wretiii
 
 
     [*] Saving generated masks to [complexity.hcmask]
@@ -411,7 +407,7 @@ From the above output you can see that we have generated 40824 masks matching th
 
 In case you are simply performing a password audit and tasked to discover only non-compliant passwords you can specify '--noncompliant' flag to invert generated masks:
 
-    $ python policygen.py --minlength 8 --maxlength 8 --minlower 1 --minupper 1 --mindigit 1 --minspecial 1 -o noncompliant.hcmask -q --noncompliant
+    $ python3 policygen.py --minlength 8 --maxlength 8 --minlower 1 --minupper 1 --mindigit 1 --minspecial 1 -o noncompliant.hcmask -q --noncompliant
     [*] Saving generated masks to [noncompliant.hcmask]
     [*] Using 1,000,000,000 keys/sec for calculations.
     [*] Password policy:
@@ -425,7 +421,7 @@ In case you are simply performing a password audit and tasked to discover only n
 
 Let's see some of the non-compliant masks generated above using the '--showmasks' flag:
 
-    $ python policygen.py --minlength 8 --maxlength 8 --minlower 1 --minupper 1 --mindigit 1 --minspecial 1 -o noncompliant.hcmask -q --noncompliant --showmasks
+    $ python3 policygen.py --minlength 8 --maxlength 8 --minlower 1 --minupper 1 --mindigit 1 --minspecial 1 -o noncompliant.hcmask -q --noncompliant --showmasks
     [*] Saving generated masks to [noncompliant.hcmask]
     [*] Using 1,000,000,000 keys/sec for calculations.
     [*] Password policy:
@@ -453,7 +449,7 @@ Specifying maximum complexity
 
 It is also possible to specify maximum password complexity using --maxlower, --maxupper, --maxdigit and --maxspecial flags in order to fine-tune you attack. For example, below is a sample site which enforces password policy but does not allow any special characters:
 
-    $ python policygen.py --minlength 8 --maxlength 8 --minlower 1 --minupper 1 --mindigit 1 --maxspecial 0 -o maxcomplexity.hcmask -q
+    $ python3 policygen.py --minlength 8 --maxlength 8 --minlower 1 --minupper 1 --mindigit 1 --maxspecial 0 -o maxcomplexity.hcmask -q
     [*] Saving generated masks to [maxcomplexity.hcmask]
     [*] Using 1,000,000,000 keys/sec for calculations.
     [*] Password policy:
@@ -468,30 +464,32 @@ It is also possible to specify maximum password complexity using --maxlower, --m
 Rules Analysis
 ==================
 
-`rulegen.py` implements password analysis and rule generation for the Hashcat password cracker as described in the [Automatic Password Rule Analysis and Generation](http://thesprawl.org/research/automatic-password-rule-analysis-generation/) paper. Please review this document for detailed discussion on the theory of rule analysis and generation.
-
-Reversing source words and word mangling rules from already cracked passwords can be very effective in performing attacks against still encrypted hashes. By continuously recycling/expanding generated rules and words you may be able to crack a greater number of passwords.
+`rulegen.py` implements password analysis and rule generation for the Hashcat password cracker. This version has been updated to be compatible with Python 3 and modern versions of pyenchant.
 
 Prerequisites
 -----------------
-There are several prerequisites for the effective use of `rulegen.py`. The tool utilizes Enchant spell-checking library to interface with a number of spell-checking engines such as Aspell, MySpell, etc. You must install these tools prior to use. It is also critical to install dictionaries for whatever spell-checking engine you end up using (alternatively it is possible to use a custom wordlist). At last, I have bundled PyEnchant for convenience which should interface directly with Enchant's shared libraries; however, should there be any issues, simply remove the bundled 'enchant' directory and install PyEnchant for your distribution.
+The tool utilizes Enchant spell-checking library to interface with spell-checking engines. You must install pyenchant using:
 
-For additional details on specific Hashcat rule syntax see [Hashcat Rule Based Attack](http://hashcat.net/wiki/doku.php?id=rule_based_attack).
+    $ pip3 install pyenchant
+
+For Linux users, you may also need to install the enchant library:
+
+    $ sudo apt-get install python3-enchant
 
 Analyzing a Single Password
 -------------------------------
 
 The most basic use of `rulegen.py` involves analysis of a single password to automatically detect rules. Let's detect rules and potential source word used to generate a sample password `P@55w0rd123`:
 
-    $ python rulegen.py --verbose --password P@55w0rd123
+    $ python3 rulegen.py --verbose --password P@55w0rd123
                            _ 
-         RuleGen #.#.#    | |
+         RuleGen 1.0.1    | |
           _ __   __ _  ___| | _
          | '_ \ / _` |/ __| |/ /
          | |_) | (_| | (__|   < 
          | .__/ \__,_|\___|_|\_\
          | |                    
-         |_| iphelix@thesprawl.org
+         |_| @wretiii
 
 
     [*] Using Enchant 'aspell' module. For best results please install
@@ -518,7 +516,7 @@ Spell-checking provider
 
 Notice that we are using the `aspell` Enchant module for source word detection. The exact spell-checking engine can be changed using the `--provider` flag as follows:
 
-    $ python rulegen.py --verbose --provider myspell --password P@55w0rd123 -q
+    $ python3 rulegen.py --verbose --provider myspell --password P@55w0rd123 -q
     [*] Using Enchant 'myspell' module. For best results please install
         'myspell' module language dictionaries.
     ...
@@ -531,7 +529,7 @@ Forcing source word
 
 The use of the source word detection engine can be completely disabled by specifying a source word with the `--word` flag:
 
-    $ python rulegen.py -q --verbose --word word --password P@55w0rd123
+    $ python3 rulegen.py -q --verbose --word word --password P@55w0rd123
     [*] Analyzing password: P@55w0rd123
     [+] word => ^5 ^5 ^@ ^P so0 $1 $2 $3 => P@55w0rd123
 
@@ -542,7 +540,7 @@ Defining Custom Dictionary
 
 Inevitably you will come across a point where generating rules using the standard spelling-engine wordlist is no longer sufficient. You can specify a custom wordlist using the `--wordlist` flag. This is particularly useful when reusing source words from a previous analysis session:
 
-    $ python rulegen.py -q --verbose --wordlist rockyou.txt --password 1pa55w0rd1
+    $ python3 rulegen.py -q --verbose --wordlist rockyou.txt --password 1pa55w0rd1
     [*] Using Enchant 'Personal Wordlist' module. For best results please install
         'Personal Wordlist' module language dictionaries.
     [*] Analyzing password: 1pa55w0rd1
@@ -555,7 +553,7 @@ Generating Suboptimal Rules and Words
 
 While `rulegen.py` attempts to generate and record only the best source words and passwords, there may be cases when you are interested in more results. Use `--morewords` and `--morerules` flags to generate words and rules which may exceed optimal edit distance:
 
-    $ python rulegen.py -q --verbose --password '$m0n3y$' --morerules --morewords
+    $ python3 rulegen.py -q --verbose --password '$m0n3y$' --morerules --morewords
     [*] Using Enchant 'aspell' module. For best results please install
         'aspell' module language dictionaries.
     [*] Analyzing password: $m0n3y$
@@ -572,7 +570,7 @@ Disabling Advanced Engines
 
 `rulegen.py` includes a number of advanced engines to generate better quality words and rules. It is possible to disable them to observe the difference (or if they are causing issues) using `--simplewords` and `--simplerules` flags. Let's observe how both source words and rules change with these flags on:
 
-    $ python rulegen.py -q --verbose --password '$m0n3y$' --simplewords --simplerules
+    $ python3 rulegen.py -q --verbose --password '$m0n3y$' --simplewords --simplerules
     [*] Using Enchant 'aspell' module. For best results please install
         'aspell' module language dictionaries.
     [*] Analyzing password: $m0n3y$
@@ -609,7 +607,7 @@ Now that you have mastered all of the different flags and switches, we can attem
 
 Now let's observe `rulegen.py` analysis by simply specifying the password file as the first argument:
 
-    $ python rulegen.py korelogic.txt -q
+    $ python3 rulegen.py korelogic.txt -q
     [*] Using Enchant 'aspell' module. For best results please install
         'aspell' module language dictionaries.
     [*] Analyzing passwords file: korelogic.txt:
@@ -660,7 +658,7 @@ Specifying output basename
 
 As previously mentioned `rulegen.py` saves output files using the 'analysis' basename by default. You can change file basename with the `--basename` or `-b` flag as follows:
 
-    $ python rulegen.py korelogic.txt -q -b korelogic
+    $ python3 rulegen.py korelogic.txt -q -b korelogic
     [*] Using Enchant 'aspell' module. For best results please install
         'aspell' module language dictionaries.
     [*] Analyzing passwords file: korelogic.txt:
@@ -679,8 +677,9 @@ You can also observe the inner workings of the rule generation engine with the `
 Conclusion
 ==============
 
-While this guide introduces a number of methods to analyze passwords, reverse rules and generate masks, there are a number of other tricks that are waiting for you to discover. I would be excited if you told me about some unusual use or suggestions for any of the covered tools.
+This Python 3 fork of PACK maintains all the powerful features of the original toolkit while ensuring compatibility with modern Python environments. The core functionality remains unchanged, allowing for effective password analysis and pattern detection.
+
+Original author: Peter Kacherginsky (iphelix)
+Python 3 port maintained by: @wretiii
 
 Happy Cracking!
-
-   -Peter
